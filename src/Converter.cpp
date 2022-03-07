@@ -42,9 +42,12 @@ void Aether::Converter::Initialize(const ComputeDevice& device)
         0,
         CSBlob.GetAddressOf(),
         ErrBlob.GetAddressOf()),
-        "Failed to compile compute shader.", [&ErrBlob]()
+        "Failed to compile compute shader.", [&ErrBlob](HRESULT result)
         {
-            std::cout << (char*)ErrBlob->GetBufferPointer() << "\n";
+            if (ErrBlob != nullptr)
+            {
+                std::cout << "| Compiler Errors: " << (char*)ErrBlob->GetBufferPointer() << "\n";
+            }
         });
 
     // We need reflection to dynamically aquire inputs/outputs

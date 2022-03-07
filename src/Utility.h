@@ -18,7 +18,7 @@ namespace Aether
 		// Validates the HResult and dumps to the global log file
 		// if provided, an exception will be thrown with the given message
 		// The param preException will be called before the exception is thrown
-		void ValidateHResult(HRESULT result, const char* exceptionMessage, std::function<void()> preException);
+		void ValidateHResult(HRESULT result, const char* exceptionMessage, std::function<void(HRESULT)> preException);
 
 		// Gets the name of the provided adapter.
 		const std::wstring GetAdapterName(IDXGIAdapter* adapter);

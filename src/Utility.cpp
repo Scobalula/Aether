@@ -86,11 +86,13 @@ void Aether::Utility::ValidateHResult(HRESULT result, const char* exceptionMessa
 {
 }
 
-void Aether::Utility::ValidateHResult(HRESULT result, const char* exceptionMessage, std::function<void()> preException)
+void Aether::Utility::ValidateHResult(HRESULT result, const char* exceptionMessage, std::function<void(HRESULT)> preException)
 {
     if (FAILED(result))
     {
-        preException();
+        // TODO: Logging
+        preException(result);
+        throw std::exception(exceptionMessage);
     }
 }
 
