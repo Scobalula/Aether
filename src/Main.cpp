@@ -23,6 +23,7 @@ void Run(const argh::parser& cmdl)
 
     // Add supported modes
     convertFactory.Converters.push_back(std::make_unique<Aether::CubeArray2Equ>());
+    convertFactory.Converters.push_back(std::make_unique<Aether::HemiOcta2Equ>());
 
     // List the adapters available. If the user wants to select
     // their own. If they want to select their own, this will show
@@ -63,6 +64,11 @@ void Run(const argh::parser& cmdl)
 
     auto converter = convertFactory.FindConverter(modeName.c_str());
 
+    if (converter == nullptr)
+    {
+        throw std::exception("Converter with the provided name was not found.");
+    }
+
     std::cout << "| Executing converter..." << std::endl;
 
     converter->Initialize(device);
@@ -88,7 +94,7 @@ int main(int, char* argv[])
     catch (const std::exception& ex)
     {
         std::cout << "| ERROR: " << ex.what() << std::endl;
-        std::cout << "| Check Github for usage info and help." << std::endl;
+        std::cout << "| Check Github for help." << std::endl;
     }
 
     if (!cmdl["close"])
