@@ -15,7 +15,7 @@ const std::unique_ptr<DirectX::ScratchImage> Aether::Utility::LoadImageFile(cons
 
     if (_wcsicmp(ext.c_str(), L".dds") == 0)
     {
-        auto hr = DirectX::LoadFromDDSFile(
+        hr = DirectX::LoadFromDDSFile(
             filePath.c_str(),
             DirectX::DDS_FLAGS_ALLOW_LARGE_FILES,
             &meta,
@@ -51,11 +51,7 @@ const std::unique_ptr<DirectX::ScratchImage> Aether::Utility::LoadImageFile(cons
             *result);
     }
 
-    if (FAILED(hr))
-    {
-        // TODO: Logging
-        throw std::exception("Failed to load image.");
-    }
+    ValidateHResult(hr, "Failed to load image.");
 
     return result;
 }
@@ -63,15 +59,32 @@ const std::unique_ptr<DirectX::ScratchImage> Aether::Utility::LoadImageFile(cons
 void Aether::Utility::SaveImageFile(const std::wstring& filePath, const DirectX::ScratchImage* image)
 {
     auto asPath = std::filesystem::path(filePath);
+    auto directory = asPath.parent_path();
     auto ext = asPath.extension();
+    HRESULT hr{};
+
+    std::filesystem::create_directories(directory);
 
     if (_wcsicmp(ext.c_str(), L".dds") == 0)
     {
-        auto hr = DirectX::SaveToDDSFile(
+        hr = DirectX::SaveToDDSFile(
             image->GetImages(),
             image->GetImageCount(),
             image->GetMetadata(),
             DirectX::DDS_FLAGS_ALLOW_LARGE_FILES,
+            filePath.c_str());
+    }
+    else if (_wcsicmp(ext.c_str(), L".tga") == 0)
+    {
+        hr = DirectX::SaveToTGAFile(
+            *image->GetImage(0, 0, 0),
+            DirectX::TGA_FLAGS_NONE,
+            filePath.c_str());
+    }
+    else if (_wcsicmp(ext.c_str(), L".hdr") == 0)
+    {
+        hr = DirectX::SaveToHDRFile(
+            *image->GetImage(0, 0, 0),
             filePath.c_str());
     }
     else if (_wcsicmp(ext.c_str(), L".exr") == 0)
@@ -80,10 +93,61 @@ void Aether::Utility::SaveImageFile(const std::wstring& filePath, const DirectX:
             *image->GetImage(0, 0, 0),
             filePath.c_str());
     }
+    else if (_wcsicmp(ext.c_str(), L".png") == 0)
+    {
+        hr = DirectX::SaveToWICFile(
+            image->GetImages(),
+            image->GetImageCount(),
+            DirectX::WIC_FLAGS::WIC_FLAGS_NONE,
+            DirectX::GetWICCodec(DirectX::WIC_CODEC_PNG),
+            filePath.c_str());
+    }
+    else if (_wcsicmp(ext.c_str(), L".jpg") == 0)
+    {
+        hr = DirectX::SaveToWICFile(
+            image->GetImages(),
+            image->GetImageCount(),
+            DirectX::WIC_FLAGS::WIC_FLAGS_NONE,
+            DirectX::GetWICCodec(DirectX::WIC_CODEC_JPEG),
+            filePath.c_str(), nullptr,
+            [&](IPropertyBag2* props)
+            {
+                PROPBAG2 options = {};
+                VARIANT varValues = {};
+                options.pstrName = const_cast<wchar_t*>(L"ImageQuality");
+                varValues.vt = VT_R4;
+                varValues.fltVal = 1.f;
+                std::ignore = props->Write(1, &options, &varValues);
+            });
+    }
+    else if (_wcsicmp(ext.c_str(), L".tiff") == 0 || _wcsicmp(ext.c_str(), L".tif") == 0)
+    {
+        hr = DirectX::SaveToWICFile(
+            image->GetImages(),
+            image->GetImageCount(),
+            DirectX::WIC_FLAGS::WIC_FLAGS_NONE,
+            DirectX::GetWICCodec(DirectX::WIC_CODEC_TIFF),
+            filePath.c_str(), nullptr,
+            [&](IPropertyBag2* props)
+            {
+                PROPBAG2 options = {};
+                VARIANT varValues = {};
+                options.pstrName = const_cast<wchar_t*>(L"TiffCompressionMethod");
+                varValues.vt = VT_UI1;
+                varValues.bVal = 0x00000001; // WICTiffCompressionNone
+                (void)props->Write(1, &options, &varValues);
+            });
+    }
+
+    ValidateHResult(hr, "Failed to save image.");
 }
 
 void Aether::Utility::ValidateHResult(HRESULT result, const char* exceptionMessage)
 {
+    if (FAILED(result))
+    {
+        throw std::exception(exceptionMessage);
+    }
 }
 
 void Aether::Utility::ValidateHResult(HRESULT result, const char* exceptionMessage, std::function<void(HRESULT)> preException)

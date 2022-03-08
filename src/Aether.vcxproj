@@ -100,6 +100,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>dxgi.lib;d3dcompiler.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>xcopy /E /H /C /I /Y "$(ProjectDir)\Shaders" "$(TargetDir)\Shaders"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -121,6 +128,17 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>dxgi.lib;d3dcompiler.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>python "$(TargetDir)\package_up.py"</Command>
+    </PostBuildEvent>
+    <PreBuildEvent />
+    <PreBuildEvent>
+      <Command>xcopy /E /H /C /I /Y "$(ProjectDir)\Shaders" "$(TargetDir)\Shaders"
+xcopy /E /H /C /I /Y "$(ProjectDir)\..\licenses" "$(TargetDir)\licenses"
+copy /Y "$(ProjectDir)\package_up.py" "$(TargetDir)\package_up.py"
+copy /Y "$(ProjectDir)\..\LICENSE" "$(TargetDir)\LICENSE.txt"
+copy /Y "$(ProjectDir)\..\README.md" "$(TargetDir)\README.md"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -138,6 +156,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>dxgi.lib;d3dcompiler.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>xcopy /E /H /C /I /Y "$(ProjectDir)\Shaders" "$(TargetDir)\Shaders"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -159,6 +184,17 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>dxgi.lib;d3dcompiler.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>python "$(TargetDir)\package_up.py"</Command>
+    </PostBuildEvent>
+    <PreBuildEvent />
+    <PreBuildEvent>
+      <Command>xcopy /E /H /C /I /Y "$(ProjectDir)\Shaders" "$(TargetDir)\Shaders"
+xcopy /E /H /C /I /Y "$(ProjectDir)\..\licenses" "$(TargetDir)\licenses"
+copy /Y "$(ProjectDir)\package_up.py" "$(TargetDir)\package_up.py"
+copy /Y "$(ProjectDir)\..\LICENSE" "$(TargetDir)\LICENSE.txt"
+copy /Y "$(ProjectDir)\..\README.md" "$(TargetDir)\README.md"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ComputeDeviceFactory.cpp" />
@@ -197,7 +233,7 @@
     <ResourceCompile Include="Aether.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\..\Users\Philip Maher\Downloads\Icon.ico" />
+    <Image Include="Icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

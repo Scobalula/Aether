@@ -31,7 +31,7 @@ Aether --mode=cubearray2equ --input="input.dds" --output="output.exr"
 
 ## Hemi-Octahedron To Equirectangular (hemiocta2equ)
 
-This mode takes in a single image file split into 2 hemi-octahedron enviroment maps, the upper and lower of the octahedron, and converts it to a single equirectangular image.
+This mode takes in a single image file with 2 hemi-octahedron enviroment maps side by side, the upper and lower of the octahedron, and converts it to a single equirectangular image.
 
 The following options are available:
 
@@ -41,7 +41,7 @@ The following options are available:
 Example:
 
 ```
-Aether --mode=cubearray2equ --input="input.dds" --output="output.exr"
+Aether --mode=hemiocta2equ --input="input.dds" --output="output.exr"
 ```
 
 # Building 
@@ -78,3 +78,9 @@ Information:
 * [https://jcgt.org/published/0003/02/01/paper.pdf](https://jcgt.org/published/0003/02/01/paper.pdf)
 * [https://www.semanticscholar.org/paper/Octahedron-Environment-Maps-Engelhardt-Dachsbacher/fcb9a6dbdf7b4c31f94e481cf101c83b73ea6410?p2df](https://www.semanticscholar.org/paper/Octahedron-Environment-Maps-Engelhardt-Dachsbacher/fcb9a6dbdf7b4c31f94e481cf101c83b73ea6410?p2df)
 * [https://www.researchgate.net/publication/317107172_A_Sampling-Agnostic_Software_Framework_for_Converting_Between_Texture_Map_Representations_of_Virtual_Environments](https://www.researchgate.net/publication/317107172_A_Sampling-Agnostic_Software_Framework_for_Converting_Between_Texture_Map_Representations_of_Virtual_Environments)
+
+* Test Files:
+
+* [https://polyhaven.com/hdris](https://polyhaven.com/hdris)
+* [https://www.humus.name/index.php?page=Textures&start=0](https://www.humus.name/index.php?page=Textures&start=0)
+

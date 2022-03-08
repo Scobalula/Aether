@@ -15,7 +15,7 @@ float3 DirectionToOctahdeonUV(float3 dir)
 	{
 		final.x = dir.x - dir.z;
 		final.y = dir.x + dir.z;
-		final.z = 1;
+		final.z = true;
 	}
 	else 
 	{
@@ -44,9 +44,15 @@ void ConverterMain(uint3 id : SV_DispatchThreadID)
 	float y = sin(phi);
 	float z = cos(phi) * cos(theta);
 
-	float3 final = DirectionToOctahdeonUV(float3(x, y, z));
+	float3 final = DirectionToOctahdeonUV(float3(-x, -y, z));
 
     final.x *= 0.5;
+
+	// Lower hemisphere (TODO: just make it apart of if insize Dir to Octa UV)
+	if(!final.z)
+	{
+		final.x += 0.5;
+	}
 
 	output_texture[id.xy] = input_texture.SampleLevel(input_sampler, final.xy, 0);
 }
